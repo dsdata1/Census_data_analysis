@@ -1,0 +1,53 @@
+ID,state,abbr,binge_drinker,unemployment_rate
+1,Alabama,AL,8.1,71.3
+2,Alaska,AK,7.3,79.5
+3,Arizona,AZ,7.3,73.8
+4,Arkansas,AR,6.3,72.2
+5,California,CA,7.9,76
+6,Colorado,CO,4.9,80
+7,Connecticut,CT,7.3,81.3
+8,Delaware,DE,6.2,77.9
+9,District of Columbia,DC,8.7,80
+10,Florida,FL,7.6,75.2
+11,Georgia,GA,7.7,74.8
+12,Hawaii,HI,5,79.2
+13,Idaho,ID,5,75.9
+14,Illinois,IL,7.5,78.9
+15,Indiana,IN,6.4,77.4
+16,Iowa,IA,4,82.9
+17,Kansas,KS,4.6,79.4
+18,Kentucky,KY,7.2,71.9
+19,Louisiana,LA,6.9,72.2
+20,Maine,ME,5.7,78
+21,Maryland,MD,6.8,81.2
+22,Massachusetts,MA,6.3,81.1
+23,Michigan,MI,7.7,75.1
+24,Minnesota,MN,4.3,83.6
+25,Mississippi,MS,9,70.9
+26,Missouri,MO,6.4,76.5
+27,Montana,MT,4.7,77.6
+28,Nebraska,NE,3.7,84.3
+29,Nevada,NV,8.3,77.1
+30,New Hampshire,NH,4.7,82
+31,New Jersey,NJ,7.1,80.1
+32,New Mexico,NM,8,72.1
+33,New York,NY,6.8,76.8
+34,North Carolina,NC,7.7,76.1
+35,North Dakota,ND,2.8,83
+36,Ohio,OH,6.5,77.2
+37,Oklahoma,OK,5.1,74
+38,Oregon,OR,7.3,75.9
+39,Pennsylvania,PA,6.5,77.3
+40,Rhode Island,RI,7.1,79.4
+41,South Carolina,SC,7.6,74.5
+42,South Dakota,SD,3.5,83.5
+43,Tennessee,TN,7.2,73.8
+44,Texas,TX,5.5,76.2
+45,Utah,UT,4.4,78.5
+46,Vermont,VT,5.5,80.8
+47,Virginia,VA,5.6,79.2
+48,Washington,WA,6,77.3
+49,West Virginia,WV,6.6,66.9
+50,Wisconsin,WI,5,81.3
+51,Wyoming,WY,4.2,81
+52,Puerto Rico,PR,17.5,58.8

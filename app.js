@@ -22,16 +22,17 @@ d3.select('.chart')
 	.style('opacity', 0);
 
 
-d3.csv("data.csv", function(err, combineData) {
+d3.csv("stateData.csv", function(err, stateData) {
 
 if (err) throw err;
 
-  combineData.forEach(function(data) {
+  stateData.forEach(function(data) {
 
-    // console.log(combineData);
+    console.log(stateData);
 
-    data.binge_drinker = +data.binge_drinker;
+    
     data.unemployment_rate = +data.unemployment_rate;
+    data.binge_drinker = +data.binge_drinker;
 });
 
 // Create scale functions
@@ -51,20 +52,20 @@ if (err) throw err;
   // This function identifies the minimum and maximum values in a column in hairData.csv
   // and assign them to xMin and xMax variables, which will define the axis domain
   function findMinAndMax(dataColumnX) {
-    xMin = d3.min(combineData, function(data) {
-      return +data[dataColumnX] * 0.8;
+    xMin = d3.min(stateData, function(data) {
+      return +data.binge_drinker * 0.8;
     });
 
-    xMax = d3.max(combineData, function(data) {
-      return +data[dataColumnX] * 1.1;
+    xMax = d3.max(stateData, function(data) {
+      return +data.binge_drinker * 1.1;
     });
 
-    yMax = d3.max(combineData, function(data) {
+    yMax = d3.max(stateData, function(data) {
       return +data.unemployment_rate * 1.1;
     });
   }
 
-  var currentAxisLabelX = "zero employment";
+  var currentAxisLabelX = "unemployment_rate";
 
   // Call findMinAndMax() with 'zero employment' as default
   findMinAndMax(currentAxisLabelX);
@@ -74,19 +75,41 @@ if (err) throw err;
   yLinearScale.domain([0, yMax]);
 
 
+
+ // Initialize tooltip
+  var toolTip = d3
+    .tip()
+    .attr("class", "tooltip")
+    // Define position
+    .offset([80, -60])
+    // The html() method allows us to mix JavaScript with HTML in the callback function
+    .html(function(data) {
+      var stateName = data.state;
+      var binge_drinker_p = +data.binge_drinker;
+      var unemployment_rate_p = data.unemployment_rate;      // Tooltip text depends on which axis is active/has been clicked
+      return stateName +
+        "<br> %unemployed :" +
+        binge_drinker_p +
+        "<br> %Binge: " +
+        unemployment_rate_p;
+    });
+
+  // Create tooltip
+  chart.call(toolTip);
+
 chart
     .selectAll("circle")
-    .data(combineData)
+    .data(stateData)
     .enter()
     .append("circle")
     .attr("cx", function(data, index) {
-      return xLinearScale(+data[currentAxisLabelX]);
+      return xLinearScale(+data.binge_drinker);
     })
     .attr("cy", function(data, index) {
       return yLinearScale(data.unemployment_rate);
     })
     .attr("r", "15")
-    .attr("fill", "#E75480")
+    .attr("fill", "#ADD8E6")
     // display tooltip on click
     .on("click", function(data) {
       toolTip.show(data);
@@ -96,6 +119,20 @@ chart
       toolTip.hide(data);
     });
 
+ chart.selectAll("text")
+      .data(stateData)
+      .enter().append("text")
+      .attr("class", "text")
+      .attr("x", function(data, index) {
+        return xLinearScale(data.binge_drinker);
+      })
+      .attr("y", function(data, index) {
+        return yLinearScale(data.unemployment_rate);
+      })
+      .attr("text-anchor", "middle")
+      .attr("font-size", "11")
+      .text(function(data, index) {
+        return data.abbr});
 
 // Create and situate your axes and labels to the left and bottom of the chart.
 
@@ -110,7 +147,6 @@ chart
 
   // Append a group for y-axis, then display it
   chart.append("g").call(leftAxis);
-chart.append("g").call(leftAxis);
 
   // Append y-axis label
   chart
@@ -121,7 +157,7 @@ chart.append("g").call(leftAxis);
     .attr("dy", "1em")
     .attr("class", "axis-text")
     .attr("data-axis-name", "unemployment_rate")
-    .text("unemployment_rate");
+    .text("% of people who binge drink");
   // Append y-axis label
 
 
@@ -135,63 +171,9 @@ chart.append("g").call(leftAxis);
     // This axis label is active by default
     .attr("class", "axis-text active")
     .attr("data-axis-name", "unemployment_rate")
-    .text("unemplouyed");
+    .text("% of people unemployed");
 
-   function labelChange(clickedAxis) {
-    d3
-      .selectAll(".axis-text")
-      .filter(".active")
-      // An alternative to .attr("class", <className>) method. Used to toggle classes.
-      .classed("active", false)
-      .classed("inactive", true);
-
-    clickedAxis.classed("inactive", false).classed("active", true);
-  }
-
-  d3.selectAll(".axis-text").on("click", function() {
-    // Assign a variable to current axis
-    var clickedSelection = d3.select(this);
-    // "true" or "false" based on whether the axis is currently selected
-    var isClickedSelectionInactive = clickedSelection.classed("inactive");
-    // console.log("this axis is inactive", isClickedSelectionInactive)
-    // Grab the data-attribute of the axis and assign it to a variable
-    // e.g. if data-axis-name is "poverty," var clickedAxis = "poverty"
-    var clickedAxis = clickedSelection.attr("data-axis-name");
-    console.log("current axis: ", clickedAxis);
-
-    // The onclick events below take place only if the x-axis is inactive
-    // Clicking on an already active axis will therefore do nothing
-    if (isClickedSelectionInactive) {
-      // Assign the clicked axis to the variable currentAxisLabelX
-      currentAxisLabelX = clickedAxis;
-      // Call findMinAndMax() to define the min and max domain values.
-      findMinAndMax(currentAxisLabelX);
-      // Set the domain for the x-axis
-      xLinearScale.domain([xMin, xMax]);
-      // Create a transition effect for the x-axis
-      svg
-        .select(".x-axis")
-        .transition()
-        // .ease(d3.easeElastic)
-        .duration(1800)
-        .call(bottomAxis);
-      // Select all circles to create a transition effect, then relocate its horizontal location
-      // based on the new axis that was selected/clicked
-      d3.selectAll("circle").each(function() {
-        d3
-          .select(this)
-          .transition()
-          // .ease(d3.easeBounce)
-          .attr("cx", function(data) {
-            return xLinearScale(+data[currentAxisLabelX]);
-          })
-          .duration(1800);
-      });
-
-      // Change the status of the axes. See above for more info on this function.
-      labelChange(clickedSelection);
-    }
-  });
+   
 
 
 });
