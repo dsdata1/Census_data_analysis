@@ -1,27 +1,38 @@
+// creating svgs
 var svgWidth = 960;
 var svgHeight = 600;
 
+//adding margins
 var margin = { top: 20, right: 40, bottom: 80, left: 100 };
 
+
+//creating chart width and height
 var width = svgWidth - margin.left - margin.right;
 var height = svgHeight - margin.top - margin.bottom;
 
-var svg = d3
-  .select('.chart')
-  .append('svg')
-  .attr('width', svgWidth)
-  .attr('height', svgHeight)
-  .append('g')
-  .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
+//appending svg to chart class
+var svg = d3.select('.chart')
+  .append('svg')
+      .attr('width', svgWidth)
+      .attr('height', svgHeight)
+  //this is g for creating axes
+  .append('g')
+      .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+//appending grouping element g to svg
 var chart = svg.append('g');
 
+
+//appending tooltip to chart
 d3.select('.chart')
 	.append('div')
-	.attr('class', 'tooltip')
-	.style('opacity', 0);
+	    .attr('class', 'tooltip')
+	    .style('opacity', 0);
 
 
+
+//requesting the data from csv
 d3.csv("stateData.csv", function(err, stateData) {
 
 if (err) throw err;
@@ -30,14 +41,14 @@ if (err) throw err;
 
     console.log(stateData);
 
-    
+    //changing string data to float
     data.unemployment_rate = +data.unemployment_rate;
     data.binge_drinker = +data.binge_drinker;
 });
 
+
 // Create scale functions
   var yLinearScale = d3.scaleLinear().range([height, 0]);
-
   var xLinearScale = d3.scaleLinear().range([0, width]);
 
   // Create axis functions
